@@ -1,0 +1,41 @@
+# 📁 Year Tracker — File Structure
+
+year-tracker/
+│
+├── index.html        ← Main HTML structure
+├── style.css         ← All styling + animations
+├── script.js         ← All JS logic + PWA register
+├── manifest.json     ← PWA config (name, icons, theme)
+├── sw.js             ← Service Worker (offline support)
+│
+└── icons/
+    ├── icon-192.png  ← App icon (192×192 px)
+    └── icon-512.png  ← App icon (512×512 px)
+
+
+## 🚀 Deploy on GitHub Pages
+
+1. Create repo: akgtrunner.github.io
+2. Upload all files (keep folder structure)
+3. Go to Settings → Pages → Enable
+4. Live at: https://akgtrunner.github.io
+
+## 📲 Install as App on Phone
+
+### Android (Chrome):
+1. Open website in Chrome
+2. Tap 3-dot menu → "Add to Home Screen"
+3. Tap Install ✅
+
+### iPhone (Safari):
+1. Open website in Safari
+2. Tap Share button (box with arrow)
+3. Tap "Add to Home Screen"
+4. Tap Add ✅
+
+## 🎨 Icons kaise banao (Free)
+
+Go to: https://realfavicongenerator.net
+- Upload any image
+- Download icon pack
+- Put icon-192.png and icon-512.png in /icons/ folder
