@@ -1,420 +1,85 @@
-/* ══════════════════════════════════════════════════
-   YEAR TRACKER — style.css (No Scroll, Single Page)
-   ══════════════════════════════════════════════════ */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YEAR — 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icons/icon-192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="icons/icon-512.png" sizes="512x512">
+</head>
+<body>
 
-*, *::before, *::after {
-  margin: 0; padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
+  <canvas id="bgCanvas"></canvas>
 
-:root {
-  --bg:         #080808;
-  --border:     rgba(255,255,255,0.07);
-  --done:       #d0d0d0;
-  --today:      #ff4d00;
-  --today-glow: rgba(255,77,0,0.55);
-  --left:       #252525;
-  --accent:     #ff4d00;
-  --accent2:    #ff8c42;
-  --gold:       #c9a84c;
-  --text-hi:    #ffffff;
-  --text-mid:   #999;
-  --text-lo:    #555;
-}
+  <div class="page">
 
-/* ── NO SCROLL ──────────────────────────────────── */
-html, body {
-  width: 100%; height: 100%;
-  overflow: hidden;
-  background: var(--bg);
-  color: var(--text-hi);
-  font-family: 'JetBrains Mono', monospace;
-}
+    <!-- HEADER -->
+    <header>
+      <div class="brand" id="brandYear">20<span>26</span></div>
+      <div class="header-right">
+        <div class="header-date" id="headerDate">—</div>
+        <div class="header-daynum" id="headerDayNum">000</div>
+      </div>
+    </header>
 
-#bgCanvas {
-  position: fixed;
-  inset: 0; z-index: 0;
-  opacity: 0.3;
-  pointer-events: none;
-}
+    <!-- MAIN -->
+    <main>
 
-/* ── PAGE: full viewport flex column ────────────── */
-.page {
-  position: relative;
-  z-index: 1;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(10px, 2.5vw, 28px) clamp(14px, 4vw, 52px);
-  gap: clamp(6px, 1.2vh, 14px);
-}
+      <div class="grid-wrap">
+        <div class="grid-label">Every dot is a day — this is your year</div>
+        <div class="grid" id="grid"></div>
+      </div>
 
-/* ══════════════════════════════════════════════════
-   HEADER
-   ══════════════════════════════════════════════════ */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-shrink: 0;
-  opacity: 0;
-  animation: slideDown 0.7s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
-}
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-value orange" id="statDone">—</div>
+          <div class="stat-label">Days Passed</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-value white" id="statTotal">365</div>
+          <div class="stat-label">Total Days</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-value dim" id="statLeft">—</div>
+          <div class="stat-label">Days Left</div>
+        </div>
+      </div>
 
-.brand {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(32px, 6vw, 80px);
-  letter-spacing: 0.06em;
-  line-height: 1;
-  color: var(--text-hi);
-}
-.brand span { color: var(--accent); }
+      <div class="quote" id="quoteEl">
+        "The days are long, but the years are short."
+      </div>
 
-.header-right { text-align: right; }
+    </main>
 
-.header-date {
-  font-family: 'Crimson Pro', serif;
-  font-style: italic;
-  font-size: clamp(10px, 1.6vw, 14px);
-  color: var(--text-mid);
-  letter-spacing: 0.04em;
-}
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-top">
+        <div class="footer-left">
+          <div class="footer-title">Year Completed</div>
+          <div class="footer-pct-big" id="footerPct">0%</div>
+          <div class="footer-sub" id="footerSub">of 2026 is gone forever</div>
+        </div>
+        <div class="footer-right">
+          <div class="footer-days-left" id="footerDaysLeft">— days</div>
+          <div class="footer-days-label">still remaining</div>
+        </div>
+      </div>
 
-.header-daynum {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(22px, 4vw, 48px);
-  letter-spacing: 0.06em;
-  color: var(--text-lo);
-  line-height: 1;
-}
+      <!-- Progress bar with month ticks -->
+      <div class="progress-track" id="progressTrack">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        <div class="progress-markers" id="progressMarkers"></div>
+      </div>
+    </footer>
 
-/* ══════════════════════════════════════════════════
-   GRID SECTION
-   ══════════════════════════════════════════════════ */
-.grid-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  opacity: 0;
-  animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
-}
+  </div>
 
-.grid-label {
-  font-size: clamp(7px, 1.2vw, 9px);
-  letter-spacing: 0.22em;
-  color: var(--text-lo);
-  text-transform: uppercase;
-  text-align: center;
-  margin-bottom: clamp(6px, 1.2vh, 14px);
-}
+  <div id="tooltip"></div>
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(25, 1fr);
-  gap: clamp(3px, 0.6vw, 8px);
-  width: 100%;
-}
-
-/* ─── DOTS ──────────────────────────────────────── */
-.dot {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  cursor: crosshair;
-  opacity: 0;
-  transform: scale(0.3);
-  transition: transform 0.15s ease, filter 0.15s ease;
-}
-
-.dot.done {
-  background: var(--done);
-  animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards;
-}
-.dot.today {
-  background: var(--today);
-  animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards,
-             todayPulse 2s ease-in-out infinite;
-  z-index: 2;
-}
-.dot.left {
-  background: var(--left);
-  border: 1px solid rgba(255,255,255,0.04);
-  animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards;
-}
-.dot:hover {
-  transform: scale(1.7) !important;
-  filter: brightness(1.5);
-  z-index: 10;
-}
-
-/* ══════════════════════════════════════════════════
-   STATS ROW
-   ══════════════════════════════════════════════════ */
-.stats-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(12px, 3vw, 48px);
-  flex-shrink: 0;
-  opacity: 0;
-  animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.35s forwards;
-}
-
-.stat { text-align: center; }
-
-.stat-value {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(24px, 4.5vw, 48px);
-  letter-spacing: 0.04em;
-  line-height: 1;
-}
-.stat-value.orange { color: var(--accent); }
-.stat-value.white  { color: var(--text-hi); }
-.stat-value.dim    { color: var(--text-mid); }
-
-.stat-label {
-  font-size: clamp(7px, 1vw, 9px);
-  letter-spacing: 0.18em;
-  color: var(--text-lo);
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-
-.stat-divider {
-  width: 1px;
-  height: clamp(24px, 3vh, 40px);
-  background: var(--border);
-  flex-shrink: 0;
-}
-
-/* ══════════════════════════════════════════════════
-   QUOTE
-   ══════════════════════════════════════════════════ */
-.quote {
-  font-family: 'Crimson Pro', serif;
-  font-style: italic;
-  font-size: clamp(11px, 1.6vw, 14px);
-  color: var(--text-mid);
-  text-align: center;
-  line-height: 1.5;
-  flex-shrink: 0;
-  padding: 0 clamp(8px, 3vw, 40px);
-  opacity: 0;
-  animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
-}
-
-/* ══════════════════════════════════════════════════
-   FOOTER
-   ══════════════════════════════════════════════════ */
-footer {
-  flex-shrink: 0;
-  opacity: 0;
-  animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.65s forwards;
-}
-
-.footer-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: clamp(8px, 1.5vh, 14px);
-}
-
-.footer-left { display: flex; flex-direction: column; gap: 2px; }
-
-.footer-title {
-  font-size: clamp(7px, 1.1vw, 9px);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-lo);
-}
-
-.footer-pct-big {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(36px, 6vw, 68px);
-  line-height: 1;
-  letter-spacing: 0.02em;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 55%, var(--gold) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 16px rgba(255,77,0,0.3));
-}
-
-.footer-sub {
-  font-size: clamp(8px, 1.2vw, 10px);
-  color: var(--text-mid);
-  letter-spacing: 0.1em;
-}
-
-.footer-right {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  align-items: flex-end;
-}
-
-.footer-days-left {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(18px, 3vw, 30px);
-  color: var(--text-hi);
-  letter-spacing: 0.06em;
-  line-height: 1;
-}
-
-.footer-days-label {
-  font-size: clamp(7px, 1vw, 9px);
-  letter-spacing: 0.18em;
-  color: var(--text-lo);
-  text-transform: uppercase;
-}
-
-/* ─── PROGRESS BAR ──────────────────────────────── */
-.progress-track {
-  position: relative;
-  width: 100%;
-  height: 2px;
-  background: var(--left);
-  margin-bottom: clamp(6px, 1.2vh, 12px);
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #ff4d00, #ff8c42, #c9a84c);
-  transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
-  position: relative;
-}
-
-.progress-fill::after {
-  content: '';
-  position: absolute;
-  right: -1px; top: 50%;
-  transform: translateY(-50%);
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--accent2);
-  box-shadow: 0 0 10px 3px rgba(255,140,66,0.7);
-}
-
-.progress-markers {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
-
-.month-tick {
-  position: absolute;
-  top: -3px;
-  width: 1px; height: 8px;
-  background: rgba(255,255,255,0.1);
-}
-
-.month-name {
-  position: absolute;
-  top: 8px;
-  font-size: 6px;
-  letter-spacing: 0.06em;
-  color: var(--text-lo);
-  transform: translateX(-50%);
-  text-transform: uppercase;
-}
-
-/* ─── MADE WITH LOVE ────────────────────────────── */
-.made-with-love {
-  text-align: center;
-  font-size: clamp(9px, 1.2vw, 11px);
-  letter-spacing: 0.14em;
-  color: var(--text-lo);
-  text-transform: uppercase;
-}
-
-.made-with-love .heart {
-  font-size: clamp(10px, 1.3vw, 13px);
-  animation: heartbeat 1.4s ease-in-out infinite;
-  display: inline-block;
-}
-
-/* ─── TOOLTIP ───────────────────────────────────── */
-#tooltip {
-  position: fixed;
-  background: rgba(14,14,14,0.96);
-  border: 1px solid rgba(255,77,0,0.25);
-  color: var(--text-hi);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  padding: 5px 11px;
-  border-radius: 2px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.1s;
-  z-index: 999;
-  white-space: nowrap;
-  backdrop-filter: blur(8px);
-}
-#tooltip .t-day { color: var(--accent); }
-
-/* ══════════════════════════════════════════════════
-   ANIMATIONS
-   ══════════════════════════════════════════════════ */
-@keyframes slideDown {
-  from { opacity:0; transform:translateY(-16px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(12px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-@keyframes popIn {
-  to { opacity:1; transform:scale(1); }
-}
-@keyframes todayPulse {
-  0%,100% { box-shadow: 0 0 0 0 var(--today-glow), 0 0 10px 2px var(--today-glow); }
-  50%      { box-shadow: 0 0 0 5px rgba(255,77,0,0), 0 0 20px 7px var(--today-glow); }
-}
-@keyframes heartbeat {
-  0%,100% { transform: scale(1); }
-  50%      { transform: scale(1.35); }
-}
-
-/* ══════════════════════════════════════════════════
-   RESPONSIVE — Tablet
-   ══════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(18, 1fr);
-  }
-  .month-name { display: none; }
-}
-
-/* ══════════════════════════════════════════════════
-   RESPONSIVE — Mobile
-   ══════════════════════════════════════════════════ */
-@media (max-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(15, 1fr);
-    gap: clamp(2px, 0.8vw, 5px);
-  }
-
-  .footer-top {
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .footer-pct-big { font-size: clamp(28px, 8vw, 44px); }
-}
-
-/* ══════════════════════════════════════════════════
-   RESPONSIVE — Very Small (360px)
-   ══════════════════════════════════════════════════ */
-@media (max-width: 360px) {
-  .grid {
-    grid-template-columns: repeat(13, 1fr);
-  }
-}
+  <script src="script.js"></script>
+</body>
+</html>
