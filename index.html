@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>YEAR — 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="icons/icon-192.png" sizes="192x192">
-  <link rel="icon" type="image/png" href="icons/icon-512.png" sizes="512x512">
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#ff4d00" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Year Tracker" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -17,43 +22,40 @@
 
     <!-- HEADER -->
     <header>
+      
       <div class="brand" id="brandYear">20<span>26</span></div>
       <div class="header-right">
         <div class="header-date" id="headerDate">—</div>
-        <div class="header-daynum" id="headerDayNum">000</div>
+        <div class="header-daynum" id="headerDayNum">DAY 0</div>
       </div>
     </header>
 
-    <!-- MAIN -->
-    <main>
+    <!-- GRID -->
+    <section class="grid-section">
+      <div class="grid-label">Every dot is a day — this is your year</div>
+      <div class="grid" id="grid"></div>
+    </section>
 
-      <div class="grid-wrap">
-        <div class="grid-label">Every dot is a day — this is your year</div>
-        <div class="grid" id="grid"></div>
+    <!-- STATS -->
+    <section class="stats-row">
+      <div class="stat">
+        <div class="stat-value orange" id="statDone">—</div>
+        <div class="stat-label">Passed</div>
       </div>
-
-      <div class="stats-row">
-        <div class="stat">
-          <div class="stat-value orange" id="statDone">—</div>
-          <div class="stat-label">Days Passed</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-value white" id="statTotal">365</div>
-          <div class="stat-label">Total Days</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-value dim" id="statLeft">—</div>
-          <div class="stat-label">Days Left</div>
-        </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-value white" id="statTotal">365</div>
+        <div class="stat-label">Total</div>
       </div>
-
-      <div class="quote" id="quoteEl">
-        "The days are long, but the years are short."
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-value dim" id="statLeft">—</div>
+        <div class="stat-label">Left</div>
       </div>
+    </section>
 
-    </main>
+    <!-- QUOTE -->
+    <div class="quote" id="quoteEl">"The days are long, but the years are short."</div>
 
     <!-- FOOTER -->
     <footer>
@@ -69,17 +71,19 @@
         </div>
       </div>
 
-      <!-- Progress bar with month ticks -->
-      <div class="progress-track" id="progressTrack">
+      <div class="progress-track">
         <div class="progress-fill" id="progressFill" style="width:0%"></div>
         <div class="progress-markers" id="progressMarkers"></div>
+      </div>
+
+      <div class="made-with-love">
+        Made with <span class="heart">❤️</span> — Aman Gupta
       </div>
     </footer>
 
   </div>
 
   <div id="tooltip"></div>
-
   <script src="script.js"></script>
 </body>
 </html>
